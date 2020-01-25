@@ -1,3 +1,5 @@
+'use strict'
+
 const { Server } = require('net');
 const Request = require('./lib/request');
 const {processRequest} = require('./app');
