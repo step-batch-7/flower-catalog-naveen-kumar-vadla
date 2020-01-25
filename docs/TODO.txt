@@ -1,8 +1,9 @@
 ==> Home.page <==
 main heading
   Flower Catalog 
-    * color orange
     * font family default
+    * align center
+    * color orange
 
 Horizontal line
   below heading 
