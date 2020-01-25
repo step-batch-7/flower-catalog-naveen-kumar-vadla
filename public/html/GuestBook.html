@@ -13,17 +13,19 @@
     </div>
     <div id="comment-container">
       <h1>Leave a Comment</h1>
-      <p>
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name">
-      </p>
-      <p>
-        <label for="Comment">Comment:</label>
-        <textarea name="comment" id="comment" cols="30" rows="5"></textarea>
-      </p>
-      <p>
-        <input type="button" value="Submit" id="submitComment">
-      </p>
+      <form action="/registerComment">
+        <p>
+          <label for="name">Name:</label>
+          <input type="text" name="name" id="name">
+        </p>
+        <p>
+          <label for="Comment">Comment:</label>
+          <textarea name="comment" id="comment" cols="30" rows="5"></textarea>
+        </p>
+        <p>
+          <input type="button" value="Submit" id="submitComment">
+        </p>
+      </form>
     </div>
     <div id="comments-log">
       <p class="dateTime">DATE_TIME</p>
