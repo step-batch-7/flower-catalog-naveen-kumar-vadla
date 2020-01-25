@@ -31,6 +31,6 @@ watering flowers
 
 
 Tasks : 
-  * create folders public public/js public/css public/images public/docs
-  * Add images to public/images folder
-  * Add flowers information docs to public/docs
+  --DONE-- * create folders public public/js public/css public/images public/docs
+  --DONE-- * Add images to public/images folder
+  --DONE-- * Add flowers information docs to public/docs
