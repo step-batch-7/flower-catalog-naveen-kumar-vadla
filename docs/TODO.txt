@@ -28,3 +28,9 @@ watering flowers
   animated-flower-image-0021.gif
   * aligned at right to Flowers image and below flowers link
   * onclick hide for a second 
+
+
+Tasks : 
+  * create folders public public/js public/css public/images public/docs
+  * Add images to public/images folder
+  * Add flowers information docs to public/docs
