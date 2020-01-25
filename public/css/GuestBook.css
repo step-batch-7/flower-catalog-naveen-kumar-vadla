@@ -1,0 +1,54 @@
+body {
+  padding: 0% 5% 5% 5%;
+}
+
+#main-heading {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid black;
+}
+
+#heading {
+  text-align: center;
+  color: orange;
+}
+#heading,
+#goToHome {
+  margin: 1% 0% 0% 0%;
+}
+
+#heading {
+  padding: 0% 0% 0% 0.5%;
+}
+
+#goToHome {
+  padding: 0.3% 0% 0% 0%;
+}
+
+#submitComment {
+  background: linear-gradient(#cccccc,#b7b7b7);
+}
+
+#comment-container {
+  border-bottom: 1px solid black;
+}
+
+#comments-log {
+  display: flex;
+  flex-flow: row wrap;
+}
+.dateTime,
+.name,
+.comments
+{
+  margin: 0.5% 0% 0% 0%;
+}
+.dateTime {
+  padding: 0% 5% 0% 0%;
+}
+.name {
+  padding: 0% 5% 0% 5%;
+}
+.comments {
+  padding: 0% 0% 0% 5%;
+}
