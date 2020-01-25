@@ -1,36 +1,32 @@
-==> Home.page <==
-main heading
-  Flower Catalog 
-    * font family default
-    * align center
-    * color orange
-
-Horizontal line
-  below heading 
-    * color black
-
-Flowers Image
-  freshorigins.jpg
-    * align left
-    * border for Image
-  
-Links 
-  link to flower Abeliophyllum
-  link to flower Ageratum
-  * aligned right to Flowers image
-  * onclick take to that specific flower description
-  
-  link to guide book
-  * aligned right to Flowers image and below the watering flowers image
-  * onclick take to that guide book page 
-
-watering flowers 
-  animated-flower-image-0021.gif
-  * aligned at right to Flowers image and below flowers link
-  * onclick hide for a second 
-
-
 Tasks : 
   --DONE-- * create folders public public/js public/css public/images public/docs
   --DONE-- * Add images to public/images folder
   --DONE-- * Add flowers information docs to public/docs
+
+==> Home.page <==
+  main heading
+    Flower Catalog 
+    --DONE--    * font family default
+    --DONE--    * align center
+    --DONE--    * color orange
+
+  Horizontal line below heading 
+    --DONE--    * color black
+
+  Flowers Image (freshorigins.jpg)
+    --DONE--    * align left
+    --DONE--    * border for Image
+
+  Links 
+    link to flower Abeliophyllum
+    link to flower Ageratum
+    --DONE--  * aligned right to Flowers image
+    --Pending--  * onclick take to that specific flower description
+
+    link to guest book
+    --DONE--  * aligned right to Flowers image and below the watering flowers image
+    --Pending--  * onclick take to that guest book page 
+
+  watering flowers (animated-flower-image-0021.gif)
+    --DONE--  * aligned at right to Flowers image and below flowers link
+    --Pending--  * onclick hide for a second 
