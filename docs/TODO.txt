@@ -3,7 +3,7 @@ Tasks :
   --DONE-- * Add images to public/images folder
   --DONE-- * Add flowers information docs to public/docs
 
-==> Home.page <==
+==> Home page <==
   main heading
     Flower Catalog 
     --DONE--    * font family default
@@ -30,3 +30,91 @@ Tasks :
   watering flowers (animated-flower-image-0021.gif)
     --DONE--  * aligned at right to Flowers image and below flowers link
     --Pending--  * onclick hide for a second 
+
+==> Abeliophyllum Page <==
+   main heading
+     Abeliophyllum
+     * font family default
+     * align center
+     * color orange
+
+  link to go to Home Page
+    * color violet
+    * align left of main heading
+    * text "<<"
+  
+  Horizontal line below heading 
+    * color black
+
+  Flower Image (Abeliophyllum.jpg)
+    * align left
+    * border for Image
+  
+  flower description  
+    * align right side of image and center
+
+  link to download as pdf
+    * align right side of image and below description
+
+==> Ageratum Page <==
+   main heading
+     Ageratum
+     * font family default
+     * align center
+     * color orange
+
+  link to go to Home Page
+    * color violet
+    * align left of main heading
+    * text "<<"
+  
+  Horizontal line below heading 
+    * color black
+
+  Flower Image (Ageratum.jpg)
+    * align left
+    * border for Image
+  
+  flower description  
+    * align right side of image and center
+
+  link to download as pdf
+    * align right side of image and below description
+
+==> Guest Book <==
+  main heading
+     Guest Book
+     * font family default
+     * align center
+     * color orange
+  
+  link to go to Home Page
+    * color violet
+    * align left of main heading
+    * text "<<"
+  
+  Horizontal line below heading 
+    * color black
+
+  sideHeading 
+    Leave a comment
+      * bold 
+      * color black
+      * font family default
+
+  Text Box
+    label name
+      * type text
+      * color black
+    label comment 
+      * type textarea
+      * color black
+  
+  submit 
+    * type button 
+    * value submit 
+
+  All Guests comments section 
+    * format date time name commentsList 
+    * latest first
+    
