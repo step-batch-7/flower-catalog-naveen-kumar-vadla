@@ -4,7 +4,13 @@
   <head>
     <title>Flower Catalog</title>
     <link rel="stylesheet" href="../css/homePage.css">
-    <script src="../js/hideImage.js"></script>
+    <script>
+      const hideElement = () => {
+        const element = document.getElementById('watering-flowers');
+        element.style['visibility'] = 'hidden';
+        setTimeout(() => (element.style['visibility'] = 'visible'), 1000);
+      };
+    </script>
   </head>
 
   <body>
@@ -17,7 +23,7 @@
           <li id="ageratum"><a href="../html/Ageratum.html">Ageratum</a></li>
         </ul>
         <img src="../images/animated-flower-image-0021.gif" alt="watering-flowers" id="watering-flowers"
-          onclick="hideImage('watering-flowers')">
+          onclick="hideElement()">
         <a href="../html/GuestBook.html" id="guestBook">Guest Book</a>
       </div>
     </div>
