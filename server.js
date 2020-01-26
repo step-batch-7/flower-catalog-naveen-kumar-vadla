@@ -2,7 +2,7 @@
 
 const { Server } = require('net');
 const Request = require('./lib/request');
-const {processRequest} = require('./app');
+const { processRequest } = require('./app');
 
 const handleConnection = function (socket) {
   const remote = `${socket.remoteAddress}:${socket.remotePort}`;
