@@ -19,7 +19,7 @@ const handleConnection = function (socket) {
     res.writeTo(socket);
   });
 }
-const main = (port=4000) => {
+const main = (port=7000) => {
   const server = new Server();
   server.on('error', err => console.error('server error', err));
   server.on('connection', handleConnection);
