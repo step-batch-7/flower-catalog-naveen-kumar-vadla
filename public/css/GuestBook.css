@@ -39,10 +39,12 @@ body {
   margin: 1% 0% 0% 0%;
 }
 
-#comments-table thead td {
-  padding-right: 200px;
+.date,
+.name {
+  width: 20%;
 }
-
-#comments-table td {
+.date,
+.name,
+.comment {
   padding: 1%;
 }
