@@ -8,8 +8,8 @@
 
   <body>
     <div id="main-heading">
-      <h2 id="goToHome"><a href="./index.html"><<</a></h2> 
-      <h1 id="heading">GuestBook</h1>
+      <h2 id="goToHome"><a href="./index.html">
+          <<</a> </h2> <h1 id="heading">GuestBook</h1>
     </div>
     <div id="comment-container">
       <h1>Leave a Comment</h1>
@@ -23,14 +23,17 @@
           <textarea name="comment" id="comment" cols="30" rows="5"></textarea>
         </p>
         <p>
-          <input type="button" value="Submit" id="submitComment">
+          <input type="submit" value="Submit" id="submitComment">
         </p>
       </form>
     </div>
     <div id="comments-log">
-      <p class="dateTime">DATE_TIME</p>
-      <p class="name">NAME</p>
-      <p class="comments">COMMENTS_LIST</p>
+      <div>
+        <span class="date">DATE_TIME</span>
+        <span class="name">NAME</span>
+        <span class="comment">COMMENTS_LIST</span>
+      </div>
+      __COMMENTS__
     </div>
   </body>
 
