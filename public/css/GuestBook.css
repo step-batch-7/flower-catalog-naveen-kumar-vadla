@@ -39,6 +39,10 @@ body {
   margin: 1% 0% 0% 0%;
 }
 
-.name {
-  padding: 0% 1% 0% 1%;
+#comments-table thead td {
+  padding-right: 200px;
+}
+
+#comments-table td {
+  padding: 1%;
 }
