@@ -39,9 +39,11 @@ body {
 }
 
 #comments-log {
-  display: flex;
-  flex-flow: column wrap;
   margin: 1% 0% 0% 0%;
+}
+
+#comments-table {
+  width: 100%;
 }
 
 .date,
