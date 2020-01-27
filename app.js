@@ -1,6 +1,6 @@
 'use strict';
 
-const { existsSync, readFileSync, statSync } = require('fs');
+const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
 const Response = require('./lib/response');
 const CONTENT_TYPES = require('./lib/mimeTypes');
@@ -37,8 +37,13 @@ const serveStaticFile = req => {
   return res;
 };
 
+const loadComments = function() {
+  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH));
+  return [];
+};
+
 const serveGuestBookPage = function(req) {
-  const html = loadTemplate('guestBook.html', {});
+  const html = loadTemplate('guestBook.html', { COMMENTS: '' });
   const res = new Response();
   res.setHeader('Content-Type', CONTENT_TYPES.html);
   res.setHeader('Content-Length', html.length);
@@ -48,9 +53,11 @@ const serveGuestBookPage = function(req) {
 };
 
 const registerCommentAndRedirect = req => {
+  const comments = loadComments();
   const date = new Date().toGMTString();
   const { name, comment } = req.body;
-  console.log(date, name, comment);
+  comments.push({ date, name, comment });
+  writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
   const res = new Response();
   res.setHeader('Location', '/GuestBook.html');
   res.setHeader('Content-Length', 0);
@@ -65,8 +72,10 @@ const serveHomePage = req => {
 
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') return serveHomePage;
-  if (req.method === 'POST' && req.url === '/registerComment') return registerCommentAndRedirect;
-  if (req.method === 'GET' && req.url === '/GuestBook.html') return serveGuestBookPage;
+  if (req.method === 'POST' && req.url === '/registerComment')
+    return registerCommentAndRedirect;
+  if (req.method === 'GET' && req.url === '/GuestBook.html')
+    return serveGuestBookPage;
   if (req.method === 'GET') return serveStaticFile;
   return serveBadRequestPage;
 };
