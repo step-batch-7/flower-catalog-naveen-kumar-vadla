@@ -48,7 +48,7 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
   const html = `<tr>
     <td class = "date">${new Date(date).toGMTString()}</td>
     <td class = "name">${name}</td>
-    <td class = "comment">${comment}</td>
+    <td class = "comment">${comment.replace(/\n/g, '</br>')}</td>
   </tr>`;
   return html + commentsHtml;
 };
@@ -70,19 +70,23 @@ const replaceUnknownChars = function(text, character) {
   return text.replace(regEx, SYMBOLS[character]);
 };
 
+const redirectTo = url => {
+  const res = new Response();
+  res.setHeader('Location', url);
+  res.setHeader('Content-Length', 0);
+  res.statusCode = 301;
+  return res;
+};
+
 const registerCommentAndRedirect = req => {
   const comments = loadComments();
   const date = new Date();
   const { name, comment } = req.body;
   const keys = Object.keys(SYMBOLS);
-  const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text) );
+  const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text));
   comments.push({ date, name: nameText, comment: commentText });
   writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
-  const res = new Response();
-  res.setHeader('Location', '/GuestBook.html');
-  res.setHeader('Content-Length', 0);
-  res.statusCode = 301;
-  return res;
+  return redirectTo('./GuestBook.html');
 };
 
 const serveHomePage = req => {
@@ -92,10 +96,8 @@ const serveHomePage = req => {
 
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') return serveHomePage;
-  if (req.method === 'POST' && req.url === '/registerComment')
-    return registerCommentAndRedirect;
-  if (req.method === 'GET' && req.url === '/GuestBook.html')
-    return serveGuestBookPage;
+  if (req.method === 'POST' && req.url === '/registerComment') return registerCommentAndRedirect;
+  if (req.method === 'GET' && req.url === '/GuestBook.html') return serveGuestBookPage;
   if (req.method === 'GET') return serveStaticFile;
   return serveBadRequestPage;
 };
