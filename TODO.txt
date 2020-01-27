@@ -1,120 +1,120 @@
 Tasks : 
-  --DONE-- * create folders public public/js public/css public/images public/docs
-  --DONE-- * Add images to public/images folder
-  --DONE-- * Add flowers information docs to public/docs
+  --DONE--    * create folders public public/js public/css public/images public/docs
+  --DONE--    * Add images to public/images folder
+  --DONE--    * Add flowers information docs to public/docs
 
 ==> Home page <==
   main heading
     Flower Catalog 
-    --DONE--    * font family default
-    --DONE--    * align center
-    --DONE--    * color orange
+    --DONE--  * font family default
+    --DONE--  * align center
+    --DONE--  * color orange
 
   Horizontal line below heading 
-    --DONE--    * color black
+    --DONE--  * color black
 
-  Flowers Image (freshorigins.jpg)
-    --DONE--    * align left
-    --DONE--    * border for Image
+  Flowers Image (fresh-origins.jpg)
+    --DONE--  * align left
+    --DONE--  * border for Image
 
   Links 
     link to flower Abeliophyllum
     link to flower Ageratum
     --DONE--  * aligned right to Flowers image
-    --Pending--  * onclick take to that specific flower description
+    --DONE--  * on-click take to that specific flower description
 
     link to guest book
     --DONE--  * aligned right to Flowers image and below the watering flowers image
-    --Pending--  * onclick take to that guest book page 
+    --DONE--  * on-click take to that guest book page 
 
   watering flowers (animated-flower-image-0021.gif)
     --DONE--  * aligned at right to Flowers image and below flowers link
-    --Pending--  * onclick hide for a second 
+    --DONE--  * on-click hide for a second 
 
 ==> Abeliophyllum Page <==
    main heading
      Abeliophyllum
-     * font family default
-     * align center
-     * color orange
+       --DONE-- * font family default
+       --DONE-- * align center
+       --DONE-- * color orange
 
   link to go to Home Page
-    * color violet
-    * align left of main heading
-    * text "<<"
+      --DONE--  * color violet
+      --DONE--  * align left of main heading
+      --DONE--  * text "<<"
   
   Horizontal line below heading 
-    * color black
+      --DONE--  * color black
 
   Flower Image (Abeliophyllum.jpg)
-    * align left
-    * border for Image
+      --DONE--  * align left
+      --DONE--  * border for Image
   
   flower description  
-    * align right side of image and center
+      --DONE--  * align right side of image and center
 
   link to download as pdf
-    * align right side of image and below description
+      --DONE--  * align right side of image and below description
 
 ==> Ageratum Page <==
    main heading
      Ageratum
-     * font family default
-     * align center
-     * color orange
+      --DONE--  * font family default
+      --DONE--  * align center
+      --DONE--  * color orange
 
   link to go to Home Page
-    * color violet
-    * align left of main heading
-    * text "<<"
+      --DONE--  * color violet
+      --DONE--  * align left of main heading
+      --DONE--  * text "<<"
   
   Horizontal line below heading 
-    * color black
+      --DONE--  * color black
 
   Flower Image (Ageratum.jpg)
-    * align left
-    * border for Image
+      --DONE--  * align left
+      --DONE--  * border for Image
   
   flower description  
-    * align right side of image and center
+      --DONE--  * align right side of image and center
 
   link to download as pdf
-    * align right side of image and below description
+      --DONE--  * align right side of image and below description
 
 ==> Guest Book <==
   main heading
      Guest Book
-     * font family default
-     * align center
-     * color orange
+       --DONE-- * font family default
+       --DONE-- * align center
+       --DONE-- * color orange
   
   link to go to Home Page
-    * color violet
-    * align left of main heading
-    * text "<<"
+      --DONE--  * color violet
+      --DONE--  * align left of main heading
+      --DONE--  * text "<<"
   
   Horizontal line below heading 
-    * color black
+      --DONE--  * color black
 
   sideHeading 
     Leave a comment
-      * bold 
-      * color black
-      * font family default
+      --DONE--  * bold 
+      --DONE--  * color black
+      --DONE--  * font family default
 
   Text Box
     label name
-      * type text
-      * color black
+      --DONE--  * type text
+      --DONE--  * color black
     label comment 
-      * type textarea
-      * color black
+      --DONE--  * type textarea
+      --DONE--  * color black
   
   submit 
-    * type button 
-    * value submit 
+      --DONE--  * type button 
+      --DONE--  * value submit 
 
   All Guests comments section 
-    * format date time name commentsList 
-    * latest first
+      --DONE--  * format date time name commentsList 
+      --DONE--  * latest first
     
