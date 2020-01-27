@@ -6,7 +6,7 @@ const Response = require('./lib/response');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 
 const STATIC_FOLDER = `${__dirname}/public`;
-const COMMENTS_PATH = `${STATIC_FOLDER}/docs/comments.json`;
+const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
 const serveBadRequestPage = req => {
   const content = `<html>
@@ -42,8 +42,20 @@ const loadComments = function() {
   return [];
 };
 
+const generateCommentsHtml = (commentsHtml, commentDetails) => {
+  const { date, name, comment } = commentDetails;
+  const html = `<tr>
+    <td>${date}</td>
+    <td>${name}</td>
+    <td>${comment}</td>
+  </tr>`;
+  return html + commentsHtml;
+};
+
 const serveGuestBookPage = function(req) {
-  const html = loadTemplate('guestBook.html', { COMMENTS: '' });
+  const comments = loadComments();
+  const commentsHtml = comments.reduce(generateCommentsHtml, '');
+  const html = loadTemplate('GuestBook.html', { COMMENTS: commentsHtml });
   const res = new Response();
   res.setHeader('Content-Type', CONTENT_TYPES.html);
   res.setHeader('Content-Length', html.length);
@@ -72,10 +84,8 @@ const serveHomePage = req => {
 
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') return serveHomePage;
-  if (req.method === 'POST' && req.url === '/registerComment')
-    return registerCommentAndRedirect;
-  if (req.method === 'GET' && req.url === '/GuestBook.html')
-    return serveGuestBookPage;
+  if (req.method === 'POST' && req.url === '/registerComment') return registerCommentAndRedirect;
+  if (req.method === 'GET' && req.url === '/GuestBook.html') return serveGuestBookPage;
   if (req.method === 'GET') return serveStaticFile;
   return serveBadRequestPage;
 };
