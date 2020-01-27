@@ -4,6 +4,7 @@ const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
 const Response = require('./lib/response');
 const CONTENT_TYPES = require('./lib/mimeTypes');
+const SYMBOLS = require('./lib/symbols');
 
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
@@ -45,9 +46,9 @@ const loadComments = function() {
 const generateCommentsHtml = (commentsHtml, commentDetails) => {
   const { date, name, comment } = commentDetails;
   const html = `<tr>
-    <td>${date}</td>
-    <td>${name}</td>
-    <td>${comment}</td>
+    <td class = "date">${new Date(date).toGMTString()}</td>
+    <td class = "name">${name}</td>
+    <td class = "comment">${comment}</td>
   </tr>`;
   return html + commentsHtml;
 };
@@ -64,11 +65,18 @@ const serveGuestBookPage = function(req) {
   return res;
 };
 
+const replaceUnknownChars = function(text, character) {
+  const regEx = new RegExp(`${character}`, 'g');
+  return text.replace(regEx, SYMBOLS[character]);
+};
+
 const registerCommentAndRedirect = req => {
   const comments = loadComments();
-  const date = new Date().toGMTString();
+  const date = new Date();
   const { name, comment } = req.body;
-  comments.push({ date, name, comment });
+  const keys = Object.keys(SYMBOLS);
+  const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text) );
+  comments.push({ date, name: nameText, comment: commentText });
   writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
   const res = new Response();
   res.setHeader('Location', '/GuestBook.html');
@@ -84,8 +92,10 @@ const serveHomePage = req => {
 
 const findHandler = req => {
   if (req.method === 'GET' && req.url === '/') return serveHomePage;
-  if (req.method === 'POST' && req.url === '/registerComment') return registerCommentAndRedirect;
-  if (req.method === 'GET' && req.url === '/GuestBook.html') return serveGuestBookPage;
+  if (req.method === 'POST' && req.url === '/registerComment')
+    return registerCommentAndRedirect;
+  if (req.method === 'GET' && req.url === '/GuestBook.html')
+    return serveGuestBookPage;
   if (req.method === 'GET') return serveStaticFile;
   return serveBadRequestPage;
 };
