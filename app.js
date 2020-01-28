@@ -23,19 +23,17 @@ const serveBadRequestPage = req => {
   return res;
 };
 
-const serveStaticFile = req => {
+const serveStaticFile = (req, res) => {
   let path = `${STATIC_FOLDER}${req.url}`;
   const stat = existsSync(path) && statSync(path);
   if (!stat || !stat.isFile()) return serveBadRequestPage();
   const [, extension] = path.match(/.*\.(.*)$/) || [];
   const contentType = CONTENT_TYPES[extension];
   const content = readFileSync(path);
-  const res = new Response();
   res.setHeader('Content-Type', contentType);
   res.setHeader('Content-Length', content.length);
   res.statusCode = 200;
-  res.body = content;
-  return res;
+  res.end(content);
 };
 
 const loadComments = function() {
@@ -53,16 +51,14 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
   return html + commentsHtml;
 };
 
-const serveGuestBookPage = function(req) {
+const serveGuestBookPage = function(req, res) {
   const comments = loadComments();
   const commentsHtml = comments.reduce(generateCommentsHtml, '');
   const html = loadTemplate('GuestBook.html', { COMMENTS: commentsHtml });
-  const res = new Response();
   res.setHeader('Content-Type', CONTENT_TYPES.html);
   res.setHeader('Content-Length', html.length);
   res.statusCode = 200;
-  res.body = html;
-  return res;
+  res.end(html);
 };
 
 const replaceUnknownChars = function(text, character) {
@@ -70,28 +66,39 @@ const replaceUnknownChars = function(text, character) {
   return text.replace(regEx, SYMBOLS[character]);
 };
 
-const redirectTo = url => {
-  const res = new Response();
+const redirectTo = (url, res) => {
   res.setHeader('Location', url);
   res.setHeader('Content-Length', 0);
   res.statusCode = 301;
-  return res;
+  res.end();
 };
 
-const registerCommentAndRedirect = req => {
+const pickupParams = (query, keyValue) => {
+  const [key, value] = keyValue.split('=');
+  query[key] = value;
+  return query;
+};
+
+const readParams = keyValueTextPairs => keyValueTextPairs.split('&').reduce(pickupParams, {});
+
+const registerCommentAndRedirect = (req, res) => {
+  let data = '';
   const comments = loadComments();
   const date = new Date();
-  const { name, comment } = req.body;
-  const keys = Object.keys(SYMBOLS);
-  const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text));
-  comments.push({ date, name: nameText, comment: commentText });
-  writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
-  return redirectTo('./GuestBook.html');
+  req.on('data', chunk => (data += chunk));
+  req.on('end', () => {
+    const { name, comment } = readParams(data);
+    const keys = Object.keys(SYMBOLS);
+    const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text));
+    comments.push({ date, name: nameText, comment: commentText });
+    writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
+    redirectTo('./GuestBook.html', res);
+  });
 };
 
-const serveHomePage = req => {
+const serveHomePage = (req, res) => {
   req.url = '/index.html';
-  return serveStaticFile(req);
+  return serveStaticFile(req, res);
 };
 
 const findHandler = req => {
@@ -102,9 +109,9 @@ const findHandler = req => {
   return serveBadRequestPage;
 };
 
-const processRequest = req => {
+const processRequest = (req, res) => {
   const handler = findHandler(req);
-  return handler(req);
+  return handler(req, res);
 };
 
 module.exports = { processRequest };
