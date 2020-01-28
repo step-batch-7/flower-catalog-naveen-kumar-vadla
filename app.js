@@ -2,25 +2,23 @@
 
 const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
-const Response = require('./lib/response');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 const SYMBOLS = require('./lib/symbols');
 
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
-const serveBadRequestPage = req => {
+const serveBadRequestPage = (req, res) => {
   const content = `<html>
     <head><title>Cookies Trial</title></head>
     <body>
       <p>File Not Found</p>
     </body>
   </html>`;
-  const res = new Response();
   res.setHeader('Content-Type', CONTENT_TYPES.html);
   res.setHeader('Content-Length', content.length);
-  res.body = content;
-  return res;
+  res.statusCode = 404;
+  res.end(content);
 };
 
 const serveStaticFile = (req, res) => {
@@ -79,7 +77,8 @@ const pickupParams = (query, keyValue) => {
   return query;
 };
 
-const readParams = keyValueTextPairs => keyValueTextPairs.split('&').reduce(pickupParams, {});
+const readParams = keyValueTextPairs =>
+  keyValueTextPairs.split('&').reduce(pickupParams, {});
 
 const registerCommentAndRedirect = (req, res) => {
   let data = '';
@@ -98,7 +97,7 @@ const registerCommentAndRedirect = (req, res) => {
 
 const serveHomePage = (req, res) => {
   req.url = '/index.html';
-  return serveStaticFile(req, res);
+  serveStaticFile(req, res);
 };
 
 const findHandler = req => {
@@ -111,7 +110,7 @@ const findHandler = req => {
 
 const processRequest = (req, res) => {
   const handler = findHandler(req);
-  return handler(req, res);
+  handler(req, res);
 };
 
 module.exports = { processRequest };
