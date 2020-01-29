@@ -2,6 +2,7 @@
 
 const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
+const querystring = require('querystring');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 
 const STATIC_FOLDER = `${__dirname}/public`;
@@ -42,7 +43,7 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
   const html = `<tr>
     <td class = "date">${new Date(date).toGMTString()}</td>
     <td class = "name">${name}</td>
-    <td class = "comment">${comment.replace(/\n/g, '</br>')}</td>
+    <td class = "comment">${comment.replace(/\r\n/g, '</br>')}</td>
   </tr>`;
   return html + commentsHtml;
 };
@@ -64,21 +65,13 @@ const redirectTo = (url, res) => {
   res.end();
 };
 
-const pickupParams = (query, keyValue) => {
-  const [key, value] = keyValue.split('=');
-  query[key] = value;
-  return query;
-};
-
-const readParams = keyValueTextPairs => keyValueTextPairs.split('&').reduce(pickupParams, {});
-
 const registerCommentAndRedirect = (req, res) => {
   let data = '';
   const comments = loadComments();
   const date = new Date();
-  req.on('data', chunk => (data += decodeURIComponent(chunk).replace(/\+/g,' ')));
+  req.on('data', chunk => (data += chunk));
   req.on('end', () => {
-    const { name, comment } = readParams(data);
+    const { name, comment } = querystring.parse(data);
     comments.push({ date, name, comment });
     writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
     redirectTo('./GuestBook.html', res);
