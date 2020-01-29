@@ -2,7 +2,7 @@
 
 const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
-const querystring = require('querystring');
+const queryString = require('querystring');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 
 const STATIC_FOLDER = `${__dirname}/public`;
@@ -10,7 +10,7 @@ const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
 const serveBadRequestPage = (req, res) => {
   const content = `<html>
-    <head><title>Cookies Trial</title></head>
+    <head><title>Bad Request</title></head>
     <body>
       <p>404 File Not Found</p>
     </body>
@@ -71,7 +71,7 @@ const registerCommentAndRedirect = (req, res) => {
   const date = new Date();
   req.on('data', chunk => (data += chunk));
   req.on('end', () => {
-    const { name, comment } = querystring.parse(data);
+    const { name, comment } = queryString.parse(data);
     comments.push({ date, name, comment });
     writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
     redirectTo('./GuestBook.html', res);
@@ -92,6 +92,8 @@ const findHandler = req => {
 };
 
 const processRequest = (req, res) => {
+  console.warn('Request:',req.url,req.method);
+  console.warn(req.headers);
   const handler = findHandler(req);
   handler(req, res);
 };
