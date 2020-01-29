@@ -34,7 +34,7 @@ const serveStaticFile = (req, res) => {
 };
 
 const loadComments = () => {
-  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH));
+  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH,'utf8') || '[]');
   return [];
 };
 
