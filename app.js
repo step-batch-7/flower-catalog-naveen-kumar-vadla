@@ -3,7 +3,6 @@
 const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
 const CONTENT_TYPES = require('./lib/mimeTypes');
-const SYMBOLS = require('./lib/symbols');
 
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
@@ -12,7 +11,7 @@ const serveBadRequestPage = (req, res) => {
   const content = `<html>
     <head><title>Cookies Trial</title></head>
     <body>
-      <p>File Not Found</p>
+      <p>404 File Not Found</p>
     </body>
   </html>`;
   res.setHeader('Content-Type', CONTENT_TYPES.html);
@@ -26,15 +25,14 @@ const serveStaticFile = (req, res) => {
   const stat = existsSync(path) && statSync(path);
   if (!stat || !stat.isFile()) return serveBadRequestPage();
   const [, extension] = path.match(/.*\.(.*)$/) || [];
-  const contentType = CONTENT_TYPES[extension];
   const content = readFileSync(path);
-  res.setHeader('Content-Type', contentType);
+  res.setHeader('Content-Type', CONTENT_TYPES[extension]);
   res.setHeader('Content-Length', content.length);
   res.statusCode = 200;
   res.end(content);
 };
 
-const loadComments = function() {
+const loadComments = () => {
   if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH));
   return [];
 };
@@ -49,7 +47,7 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
   return html + commentsHtml;
 };
 
-const serveGuestBookPage = function(req, res) {
+const serveGuestBookPage = (req, res) => {
   const comments = loadComments();
   const commentsHtml = comments.reduce(generateCommentsHtml, '');
   const html = loadTemplate('GuestBook.html', { COMMENTS: commentsHtml });
@@ -57,11 +55,6 @@ const serveGuestBookPage = function(req, res) {
   res.setHeader('Content-Length', html.length);
   res.statusCode = 200;
   res.end(html);
-};
-
-const replaceUnknownChars = function(text, character) {
-  const regEx = new RegExp(`${character}`, 'g');
-  return text.replace(regEx, SYMBOLS[character]);
 };
 
 const redirectTo = (url, res) => {
@@ -77,19 +70,16 @@ const pickupParams = (query, keyValue) => {
   return query;
 };
 
-const readParams = keyValueTextPairs =>
-  keyValueTextPairs.split('&').reduce(pickupParams, {});
+const readParams = keyValueTextPairs => keyValueTextPairs.split('&').reduce(pickupParams, {});
 
 const registerCommentAndRedirect = (req, res) => {
   let data = '';
   const comments = loadComments();
   const date = new Date();
-  req.on('data', chunk => (data += chunk));
+  req.on('data', chunk => (data += decodeURIComponent(chunk).replace(/\+/g,' ')));
   req.on('end', () => {
     const { name, comment } = readParams(data);
-    const keys = Object.keys(SYMBOLS);
-    const [nameText, commentText] = [name, comment].map(text => keys.reduce(replaceUnknownChars, text));
-    comments.push({ date, name: nameText, comment: commentText });
+    comments.push({ date, name, comment });
     writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
     redirectTo('./GuestBook.html', res);
   });
