@@ -8,7 +8,7 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
-const serveNotFoundPage = (req, res) => {
+const serveNotFoundPage = (req, res, next) => {
   const content = `<html>
     <head><title>Not Found</title></head>
     <body>
@@ -21,7 +21,7 @@ const serveNotFoundPage = (req, res) => {
   res.end(content);
 };
 
-const serveBadRequestPage = (req, res) => {
+const serveBadRequestPage = (req, res, next) => {
   const content = `<html>
     <head><title>Bad Request</title></head>
     <body>
@@ -34,10 +34,11 @@ const serveBadRequestPage = (req, res) => {
   res.end(content);
 };
 
-const serveStaticFile = (req, res) => {
+const serveStaticFile = (req, res, next) => {
+  if (req.url === '/') req.url = '/index.html';
   let path = `${STATIC_FOLDER}${req.url}`;
   const stat = existsSync(path) && statSync(path);
-  if (!stat || !stat.isFile()) return serveNotFoundPage(req , res);
+  if (!stat || !stat.isFile()) return next();
   const [, extension] = path.match(/.*\.(.*)$/) || [];
   const content = readFileSync(path);
   res.setHeader('Content-Type', CONTENT_TYPES[extension]);
@@ -61,7 +62,7 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
   return html + commentsHtml;
 };
 
-const serveGuestBookPage = (req, res) => {
+const serveGuestBookPage = (req, res, next) => {
   const comments = loadComments();
   const commentsHtml = comments.reduce(generateCommentsHtml, '');
   const html = loadTemplate('GuestBook.html', { COMMENTS: commentsHtml });
@@ -78,11 +79,11 @@ const redirectTo = (url, res) => {
   res.end();
 };
 
-const registerCommentAndRedirect = (req, res) => {
+const registerCommentAndRedirect = (req, res, next) => {
   let data = '';
   const comments = loadComments();
   const date = new Date();
-  req.on('data', chunk => data += chunk);
+  req.on('data', chunk => (data += chunk));
   req.on('end', () => {
     const { name, comment } = queryString.parse(data);
     comments.push({ date, name, comment });
@@ -91,39 +92,31 @@ const registerCommentAndRedirect = (req, res) => {
   });
 };
 
-const serveHomePage = (req, res) => {
-  req.url = '/index.html';
-  serveStaticFile(req, res);
-};
+const routes = [
+  { path: '/GuestBook.html', handler: serveGuestBookPage, method: 'GET' },
+  { path: '', handler: serveStaticFile, method: 'GET' },
+  { path: '', handler: serveNotFoundPage, method: 'GET' },
+  { path: '/registerComment', handler: registerCommentAndRedirect, method: 'POST' },
+  { path: '', handler: serveNotFoundPage, method: 'POST' },
+  { handler: serveBadRequestPage }
+];
 
-const getHandlers = {
-  '/' : serveHomePage,
-  '/GuestBook.html' : serveGuestBookPage,
-  'default' : serveStaticFile
-};
-
-const postHandlers = {
-  '/registerComment' : registerCommentAndRedirect,
-  'default' : serveNotFoundPage
-};
-
-const methodHandlers = {
-  'GET' : getHandlers,
-  'POST' : postHandlers,
-  'notAllowed' : { 'default' : serveBadRequestPage }
-};
-
-const findHandler = req => {
-  const handlers = methodHandlers[req.method] || methodHandlers.notAllowed;
-  const handler = handlers[req.url] || handlers.default;
-  return handler;
+const isRouteMatched = (route, req) => {
+  if (route.method) return route.method === req.method && req.url.match(route.path);
+  return true;
 };
 
 const processRequest = (req, res) => {
   console.warn('Request:', req.url, req.method);
   console.warn(req.headers);
-  const handler = findHandler(req);
-  handler(req, res);
+  const matchedRoutes = routes.filter(route => isRouteMatched(route, req));
+  const next = () => {
+    if (matchedRoutes.length === 0) return;
+    const route = matchedRoutes.shift();
+    const handler = route.handler;
+    handler(req, res, next);
+  };
+  next();
 };
 
 module.exports = { processRequest };
