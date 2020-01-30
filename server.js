@@ -12,6 +12,8 @@ app.get('/GuestBook.html', handlers.serveGuestBookPage);
 app.get('', handlers.serveStaticFile);
 app.get('', handlers.serveNotFoundPage);
 
+app.use(handlers.readBody);
+
 app.post('/registerComment', handlers.registerCommentAndRedirect);
 app.post('', handlers.serveNotFoundPage);
 

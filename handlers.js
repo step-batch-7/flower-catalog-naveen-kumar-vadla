@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
@@ -7,7 +7,6 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
-
 
 const serveStaticFile = (req, res, next) => {
   if (req.url === '/') req.url = '/index.html';
@@ -43,23 +42,17 @@ const serveGuestBookPage = (req, res, next) => {
 };
 
 const loadComments = () => {
-  if (existsSync(COMMENTS_PATH))
-    return JSON.parse(readFileSync(COMMENTS_PATH, 'utf8') || '[]');
+  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH, 'utf8') || '[]');
   return [];
 };
 
-
 const registerCommentAndRedirect = (req, res, next) => {
-  let data = '';
   const comments = loadComments();
   const date = new Date();
-  req.on('data', chunk => (data += chunk));
-  req.on('end', () => {
-    const { name, comment } = queryString.parse(data);
-    comments.push({ date, name, comment });
-    writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
-    redirectTo('./GuestBook.html', res);
-  });
+  const { name, comment } = req.body;
+  comments.push({ date, name, comment });
+  writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
+  redirectTo('./GuestBook.html', res);
 };
 
 const redirectTo = (url, res) => {
@@ -69,6 +62,14 @@ const redirectTo = (url, res) => {
   res.end();
 };
 
+const readBody = (req, res, next) => {
+  let data = '';
+  req.on('data', chunk => (data += chunk));
+  req.on('end', () => {
+    req.body = queryString.parse(data);
+    next();
+  });
+};
 
 const serveNotFoundPage = (req, res, next) => {
   const content = `<html>
@@ -96,4 +97,11 @@ const serveBadRequestPage = (req, res, next) => {
   res.end(content);
 };
 
-module.exports = { serveStaticFile, serveGuestBookPage, registerCommentAndRedirect, serveNotFoundPage, serveBadRequestPage }
+module.exports = {
+  serveStaticFile,
+  serveGuestBookPage,
+  registerCommentAndRedirect,
+  serveNotFoundPage,
+  serveBadRequestPage,
+  readBody
+};
