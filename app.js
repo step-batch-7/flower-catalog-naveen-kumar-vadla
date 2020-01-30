@@ -8,9 +8,9 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
-const serveBadRequestPage = (req, res) => {
+const serveNotFoundPage = (req, res) => {
   const content = `<html>
-    <head><title>Bad Request</title></head>
+    <head><title>Not Found</title></head>
     <body>
       <p>404 File Not Found</p>
     </body>
@@ -21,10 +21,23 @@ const serveBadRequestPage = (req, res) => {
   res.end(content);
 };
 
+const serveBadRequestPage = (req, res) => {
+  const content = `<html>
+    <head><title>Bad Request</title></head>
+    <body>
+      <p>400 Method not allowed</p>
+    </body>
+  </html>`;
+  res.setHeader('Content-Type', CONTENT_TYPES.html);
+  res.setHeader('Content-Length', content.length);
+  res.statusCode = 400;
+  res.end(content);
+};
+
 const serveStaticFile = (req, res) => {
   let path = `${STATIC_FOLDER}${req.url}`;
   const stat = existsSync(path) && statSync(path);
-  if (!stat || !stat.isFile()) return serveBadRequestPage(req , res);
+  if (!stat || !stat.isFile()) return serveNotFoundPage(req , res);
   const [, extension] = path.match(/.*\.(.*)$/) || [];
   const content = readFileSync(path);
   res.setHeader('Content-Type', CONTENT_TYPES[extension]);
@@ -91,7 +104,7 @@ const getHandlers = {
 
 const postHandlers = {
   '/registerComment' : registerCommentAndRedirect,
-  'default' : serveBadRequestPage
+  'default' : serveNotFoundPage
 };
 
 const methodHandlers = {
