@@ -6,9 +6,20 @@
   "directories": {
     "lib": "lib"
   },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "growl": "^1.10.5",
+    "mocha": "^7.0.1",
+    "nyc": "^15.0.0"
+  },
   "scripts": {
-    "test": "eslint .",
-    "start": "node server.js"
+    "test": "nyc mocha && npm run linterTest",
+    "start": "node server.js",
+    "linterTest": "eslint .",
+    "getLinter": "curl -s  https://raw.githubusercontent.com/blpabhishek/eslintrc-config/master/.eslintrc.json -o .eslintrc.json",
+    "watch": "mocha --watch --growl"
   },
   "repository": {
     "type": "git",
@@ -20,8 +31,5 @@
   "bugs": {
     "url": "https://github.com/step-batch-7/flower-catalog-naveen-kumar-vadla/issues"
   },
-  "homepage": "https://github.com/step-batch-7/flower-catalog-naveen-kumar-vadla#readme",
-  "devDependencies": {
-    "eslint": "^6.8.0"
-  }
+  "homepage": "https://github.com/step-batch-7/flower-catalog-naveen-kumar-vadla#readme"
 }
