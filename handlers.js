@@ -8,16 +8,25 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
+const areStatsNotOk = stat => {
+  return !stat || !stat.isFile();
+};
+
+const decideUrl = url => {
+  return url === '/' ? '/index.html' : url;
+};
+
 const serveStaticFile = (req, res, next) => {
-  if (req.url === '/') req.url = '/index.html';
-  let path = `${STATIC_FOLDER}${req.url}`;
+  const url = decideUrl(req.url);
+  const path = `${STATIC_FOLDER}${url}`;
   const stat = existsSync(path) && statSync(path);
-  if (!stat || !stat.isFile()) return next();
+  if (areStatsNotOk(stat)) {
+    return next();
+  }
   const [, extension] = path.match(/.*\.(.*)$/) || [];
   const content = readFileSync(path);
   res.setHeader('Content-Type', CONTENT_TYPES[extension]);
   res.setHeader('Content-Length', content.length);
-  res.statusCode = 200;
   res.end(content);
 };
 
@@ -31,22 +40,23 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
   return html + commentsHtml;
 };
 
-const serveGuestBookPage = (req, res, next) => {
+const serveGuestBookPage = (req, res) => {
   const comments = loadComments();
   const commentsHtml = comments.reduce(generateCommentsHtml, '');
   const html = loadTemplate('GuestBook.html', { COMMENTS: commentsHtml });
   res.setHeader('Content-Type', CONTENT_TYPES.html);
   res.setHeader('Content-Length', html.length);
-  res.statusCode = 200;
   res.end(html);
 };
 
 const loadComments = () => {
-  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH, 'utf8') || '[]');
+  if (existsSync(COMMENTS_PATH)) {
+    return JSON.parse(readFileSync(COMMENTS_PATH, 'utf8') || '[]');
+  }
   return [];
 };
 
-const registerCommentAndRedirect = (req, res, next) => {
+const registerCommentAndRedirect = (req, res) => {
   const comments = loadComments();
   const date = new Date();
   const { name, comment } = req.body;
@@ -57,21 +67,22 @@ const registerCommentAndRedirect = (req, res, next) => {
 
 const redirectTo = (url, res) => {
   res.setHeader('Location', url);
-  res.setHeader('Content-Length', 0);
   res.statusCode = 301;
   res.end();
 };
 
 const readBody = (req, res, next) => {
   let data = '';
-  req.on('data', chunk => (data += chunk));
+  req.on('data', chunk => {
+    data += chunk;
+  });
   req.on('end', () => {
     req.body = queryString.parse(data);
     next();
   });
 };
 
-const serveNotFoundPage = (req, res, next) => {
+const serveNotFoundPage = (req, res) => {
   const content = `<html>
     <head><title>Not Found</title></head>
     <body>
@@ -84,7 +95,7 @@ const serveNotFoundPage = (req, res, next) => {
   res.end(content);
 };
 
-const serveBadRequestPage = (req, res, next) => {
+const serveBadRequestPage = (req, res) => {
   const content = `<html>
     <head><title>Bad Request</title></head>
     <body>

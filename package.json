@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "eslint server.js app.js public/js lib",
+    "test": "eslint .",
     "start": "node server.js"
   },
   "repository": {
