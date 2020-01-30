@@ -4,6 +4,8 @@ const { Server } = require('http');
 const handlers = require('./handlers');
 const App = require('./app');
 
+const defaultPort = 7000;
+
 const app = new App();
 
 app.get('/GuestBook.html', handlers.serveGuestBookPage);
@@ -15,9 +17,11 @@ app.post('', handlers.serveNotFoundPage);
 
 app.use(handlers.serveBadRequestPage);
 
-const main = (port = 7000) => {
+const main = (port = defaultPort) => {
   const server = new Server(app.handleRequests.bind(app));
-  server.listen(port, () => console.log(`started listening: ${port}`));
+  server.listen(port, () => process.stderr.write(`started listening: ${port}`));
 };
 
-main(process.argv[2]);
+const [, , port] = process.argv;
+
+main(port);

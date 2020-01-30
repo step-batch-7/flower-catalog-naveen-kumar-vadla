@@ -17,19 +17,22 @@ class App {
     this.routes.push({ handler });
   }
 
-  handleRequests (req, res) {
-    const matchedRoutes = this.routes.filter(route => isRouteMatched(route, req));
+  handleRequests(req, res) {
+    const matchedRoutes = this.routes.filter(route => didMatch(route, req));
     const next = () => {
-      if (matchedRoutes.length === 0) return;
-      const route = matchedRoutes.shift();
-      route.handler(req, res, next);
+      if (matchedRoutes.length) {
+        const route = matchedRoutes.shift();
+        route.handler(req, res, next);
+      }
     };
     next();
-  };
-};
+  }
+}
 
-const isRouteMatched = (route, req) => {
-  if (route.method) return route.method === req.method && req.url.match(route.path);
+const didMatch = (route, req) => {
+  if (route.method) {
+    return route.method === req.method && req.url.match(route.path);
+  }
   return true;
 };
 
