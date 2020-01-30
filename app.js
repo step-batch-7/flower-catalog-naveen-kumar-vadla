@@ -24,7 +24,7 @@ const serveBadRequestPage = (req, res) => {
 const serveStaticFile = (req, res) => {
   let path = `${STATIC_FOLDER}${req.url}`;
   const stat = existsSync(path) && statSync(path);
-  if (!stat || !stat.isFile()) return serveBadRequestPage();
+  if (!stat || !stat.isFile()) return serveBadRequestPage(req , res);
   const [, extension] = path.match(/.*\.(.*)$/) || [];
   const content = readFileSync(path);
   res.setHeader('Content-Type', CONTENT_TYPES[extension]);
@@ -34,7 +34,7 @@ const serveStaticFile = (req, res) => {
 };
 
 const loadComments = () => {
-  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH,'utf8') || '[]');
+  if (existsSync(COMMENTS_PATH)) return JSON.parse(readFileSync(COMMENTS_PATH, 'utf8') || '[]');
   return [];
 };
 
@@ -69,7 +69,7 @@ const registerCommentAndRedirect = (req, res) => {
   let data = '';
   const comments = loadComments();
   const date = new Date();
-  req.on('data', chunk => (data += chunk));
+  req.on('data', chunk => data += chunk);
   req.on('end', () => {
     const { name, comment } = queryString.parse(data);
     comments.push({ date, name, comment });
@@ -83,16 +83,31 @@ const serveHomePage = (req, res) => {
   serveStaticFile(req, res);
 };
 
+const getHandlers = {
+  '/' : serveHomePage,
+  '/GuestBook.html' : serveGuestBookPage,
+  'default' : serveStaticFile
+};
+
+const postHandlers = {
+  '/registerComment' : registerCommentAndRedirect,
+  'default' : serveBadRequestPage
+};
+
+const methodHandlers = {
+  'GET' : getHandlers,
+  'POST' : postHandlers,
+  'notAllowed' : { 'default' : serveBadRequestPage }
+};
+
 const findHandler = req => {
-  if (req.method === 'GET' && req.url === '/') return serveHomePage;
-  if (req.method === 'POST' && req.url === '/registerComment') return registerCommentAndRedirect;
-  if (req.method === 'GET' && req.url === '/GuestBook.html') return serveGuestBookPage;
-  if (req.method === 'GET') return serveStaticFile;
-  return serveBadRequestPage;
+  const handlers = methodHandlers[req.method] || methodHandlers.notAllowed;
+  const handler = handlers[req.url] || handlers.default;
+  return handler;
 };
 
 const processRequest = (req, res) => {
-  console.warn('Request:',req.url,req.method);
+  console.warn('Request:', req.url, req.method);
   console.warn(req.headers);
   const handler = findHandler(req);
   handler(req, res);
