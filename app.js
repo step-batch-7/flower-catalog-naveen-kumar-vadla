@@ -20,10 +20,9 @@ class App {
   handleRequests(req, res) {
     const matchedRoutes = this.routes.filter(route => didMatch(route, req));
     const next = () => {
-      if (matchedRoutes.length) {
-        const route = matchedRoutes.shift();
-        route.handler(req, res, next);
-      }
+      const route = matchedRoutes.shift();
+      const handler = route.handler;
+      handler && handler(req, res, next);
     };
     next();
   }
