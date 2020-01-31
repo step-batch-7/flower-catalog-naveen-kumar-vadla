@@ -1,13 +1,14 @@
 'use strict';
 
 const fs = require('fs');
-const { loadTemplate } = require('./lib/viewTemplate');
 const queryString = require('querystring');
+
+const { loadTemplate } = require('./lib/viewTemplate');
+const {COMMENTS_PATH} = require('./config');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 const App = require('./app');
 
 const STATIC_FOLDER = `${__dirname}/public`;
-const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
 const areStatsOk = path => {
   const stat = fs.existsSync(path) && fs.statSync(path);
