@@ -136,7 +136,7 @@ describe('POST', () => {
         .set('Accept', '*/*')
         .send('name=raja&comment=wonderful+site')
         .expect(301)
-        .expect('Location', './GuestBook.html')
+        .expect('Location', '/GuestBook.html')
         .expect('Content-Length', '0', done);
     });
   });

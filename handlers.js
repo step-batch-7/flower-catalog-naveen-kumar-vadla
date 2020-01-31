@@ -42,7 +42,7 @@ const generateCommentsHtml = (commentsHtml, commentDetails) => {
 };
 
 const serveGuestBookPage = (req, res) => {
-  const comments = loadComments();
+  const comments = loadComments(COMMENTS_PATH);
   const commentsHtml = comments.reduce(generateCommentsHtml, '');
   const html = loadTemplate('GuestBook.html', { COMMENTS: commentsHtml });
   res.setHeader('Content-Type', CONTENT_TYPES.html);
@@ -50,20 +50,20 @@ const serveGuestBookPage = (req, res) => {
   res.end(html);
 };
 
-const loadComments = () => {
-  if (existsSync(COMMENTS_PATH)) {
-    return JSON.parse(readFileSync(COMMENTS_PATH, 'utf8') || '[]');
+const loadComments = path => {
+  if (existsSync(path)) {
+    return JSON.parse(readFileSync(path, 'utf8') || '[]');
   }
   return [];
 };
 
 const registerCommentAndRedirect = (req, res) => {
-  const comments = loadComments();
+  const comments = loadComments(COMMENTS_PATH);
   const date = new Date();
   const { name, comment } = req.body;
   comments.push({ date, name, comment });
   writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
-  redirectTo('./GuestBook.html', res);
+  redirectTo('/GuestBook.html', res);
 };
 
 const redirectTo = (url, res) => {
