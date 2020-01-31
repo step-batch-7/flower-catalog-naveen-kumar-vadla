@@ -96,15 +96,14 @@ describe('GET', () => {
         .expect('Content-Type', 'image/jpeg', done);
     });
   });
-  
+
   describe('GuestBook.html Page', () => {
     it('should get the path /GuestBook.html', done => {
       request(app)
         .get('/GuestBook.html')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html')
-        .expect('Content-Length', '2529', done);
+        .expect('Content-Type', 'text/html', done);
     });
     it('should get the path /css/GuestBook.css', done => {
       request(app)
@@ -125,6 +124,20 @@ describe('GET', () => {
         .expect('Content-Type', 'text/plain')
         .expect('Content-Length', '18')
         .expect('404 File Not Found', done);
+    });
+  });
+});
+
+describe('POST', () => {
+  describe('should get the path /registerComment and post the comment', () => {
+    it('Should should save comments and redirect to guestBook', done => {
+      request(app)
+        .post('/registerComment')
+        .set('Accept', '*/*')
+        .send('name=raja&comment=wonderful+site')
+        .expect(301)
+        .expect('Location', './GuestBook.html')
+        .expect('Content-Length', '0', done);
     });
   });
 });
