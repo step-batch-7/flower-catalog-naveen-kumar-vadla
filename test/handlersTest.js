@@ -69,6 +69,13 @@ describe('GET', () => {
         .expect(200)
         .expect('Content-Type', 'image/jpeg', done);
     });
+    it('should get the path /docs/Abeliophyllum.pdf', done => {
+      request(app)
+        .get('/docs/Abeliophyllum.pdf')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'application/pdf', done);
+    });
   });
 
   describe('Ageratum Page', () => {
@@ -94,6 +101,13 @@ describe('GET', () => {
         .set('Accept', '*/*')
         .expect(200)
         .expect('Content-Type', 'image/jpeg', done);
+    });
+    it('should get the path /docs/Ageratum.pdf', done => {
+      request(app)
+        .get('/docs/Ageratum.pdf')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'application/pdf', done);
     });
   });
 
