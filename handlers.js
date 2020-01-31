@@ -8,8 +8,9 @@ const CONTENT_TYPES = require('./lib/mimeTypes');
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
-const areStatsNotOk = stat => {
-  return !stat || !stat.isFile();
+const areStatsOk = path => {
+  const stat = existsSync(path) && statSync(path);
+  return stat && stat.isFile();
 };
 
 const decideUrl = url => {
@@ -19,8 +20,7 @@ const decideUrl = url => {
 const serveStaticFile = (req, res, next) => {
   const url = decideUrl(req.url);
   const path = `${STATIC_FOLDER}${url}`;
-  const stat = existsSync(path) && statSync(path);
-  if (areStatsNotOk(stat)) {
+  if (!areStatsOk(path)) {
     return next();
   }
   const [, extension] = path.match(/.*\.(.*)$/) || [];
@@ -112,7 +112,16 @@ module.exports = {
   serveStaticFile,
   serveGuestBookPage,
   registerCommentAndRedirect,
+  readBody,
   serveNotFoundPage,
-  serveBadRequestPage,
-  readBody
+  serveBadRequestPage
+};
+
+module.exports = {
+  areStatsOk,
+  decideUrl,
+  generateCommentsHtml,
+  readBody,
+  redirectTo,
+  loadComments
 };
