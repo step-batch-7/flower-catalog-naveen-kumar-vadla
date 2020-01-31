@@ -45,7 +45,7 @@ describe('GET', () => {
     });
   });
 
-  describe ('Abeliophyllum Page', () => {
+  describe('Abeliophyllum Page', () => {
     it('should get the path /Abeliophyllum.html', done => {
       request(app)
         .get('/Abeliophyllum.html')
@@ -70,8 +70,8 @@ describe('GET', () => {
         .expect('Content-Type', 'image/jpeg', done);
     });
   });
-  
-  describe ('Ageratum Page', () => {
+
+  describe('Ageratum Page', () => {
     it('should get the path /Ageratum.html', done => {
       request(app)
         .get('/Ageratum.html')
@@ -94,6 +94,25 @@ describe('GET', () => {
         .set('Accept', '*/*')
         .expect(200)
         .expect('Content-Type', 'image/jpeg', done);
+    });
+  });
+  
+  describe('GuestBook.html Page', () => {
+    it('should get the path /GuestBook.html', done => {
+      request(app)
+        .get('/GuestBook.html')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'text/html')
+        .expect('Content-Length', '2529', done);
+    });
+    it('should get the path /css/GuestBook.css', done => {
+      request(app)
+        .get('/css/GuestBook.css')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'text/css')
+        .expect('Content-Length', '656', done);
     });
   });
 
