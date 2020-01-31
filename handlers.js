@@ -116,12 +116,3 @@ module.exports = {
   serveNotFoundPage,
   serveBadRequestPage
 };
-
-module.exports = {
-  areStatsOk,
-  decideUrl,
-  generateCommentsHtml,
-  readBody,
-  redirectTo,
-  loadComments
-};
