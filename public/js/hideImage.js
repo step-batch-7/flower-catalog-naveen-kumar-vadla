@@ -8,5 +8,3 @@ const hideImage = () => {
     image.style['visibility'] = 'visible';
   }, seconds);
 };
-
-module.exports = { hideImage };

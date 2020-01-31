@@ -98,12 +98,21 @@
     "overrides": [
         {
             "files": [
-                "test*.js"
+                "test*.js",
+                "test/*.js"
             ],
             "rules": {
                 "max-len": "warn",
                 "no-magic-numbers": "off",
                 "max-statements": "off"
+            }
+        },
+        {
+            "files": [
+                "public/js/*.js"
+            ],
+            "rules": {
+                "no-unused-vars": "off"
             }
         }
     ]
