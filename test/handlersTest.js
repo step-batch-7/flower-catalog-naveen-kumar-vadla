@@ -56,3 +56,15 @@ describe('GET', () => {
     });
   });
 });
+
+describe('METHOD NOT ALLOWED', () => {
+  it('Should should give method not allowed for put method ', done => {
+    request(app)
+      .put('/')
+      .set('Accept', '*/*')
+      .expect(400)
+      .expect('Content-Type', 'text/plain')
+      .expect('Content-Length', '22')
+      .expect('400 Method Not Allowed', done);
+  });
+});

@@ -92,7 +92,7 @@ const serveNotFoundPage = (req, res) => {
 };
 
 const serveBadRequestPage = (req, res) => {
-  const content = '400 Method not allowed';
+  const content = '400 Method Not Allowed';
   res.setHeader('Content-Type', CONTENT_TYPES.txt);
   res.setHeader('Content-Length', content.length);
   res.statusCode = 400;
