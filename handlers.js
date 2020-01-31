@@ -84,26 +84,16 @@ const readBody = (req, res, next) => {
 };
 
 const serveNotFoundPage = (req, res) => {
-  const content = `<html>
-    <head><title>Not Found</title></head>
-    <body>
-      <p>404 File Not Found</p>
-    </body>
-  </html>`;
-  res.setHeader('Content-Type', CONTENT_TYPES.html);
+  const content = '404 File Not Found';
+  res.setHeader('Content-Type', CONTENT_TYPES.txt);
   res.setHeader('Content-Length', content.length);
   res.statusCode = 404;
   res.end(content);
 };
 
 const serveBadRequestPage = (req, res) => {
-  const content = `<html>
-    <head><title>Bad Request</title></head>
-    <body>
-      <p>400 Method not allowed</p>
-    </body>
-  </html>`;
-  res.setHeader('Content-Type', CONTENT_TYPES.html);
+  const content = '400 Method not allowed';
+  res.setHeader('Content-Type', CONTENT_TYPES.txt);
   res.setHeader('Content-Length', content.length);
   res.statusCode = 400;
   res.end(content);
