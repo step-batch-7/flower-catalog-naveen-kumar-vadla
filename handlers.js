@@ -1,6 +1,6 @@
 'use strict';
 
-const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
+const fs = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
 const queryString = require('querystring');
 const CONTENT_TYPES = require('./lib/mimeTypes');
@@ -10,7 +10,7 @@ const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
 
 const areStatsOk = path => {
-  const stat = existsSync(path) && statSync(path);
+  const stat = fs.existsSync(path) && fs.statSync(path);
   return stat && stat.isFile();
 };
 
@@ -25,7 +25,7 @@ const serveStaticFile = (req, res, next) => {
     return next();
   }
   const [, extension] = path.match(/.*\.(.*)$/) || [];
-  const content = readFileSync(path);
+  const content = fs.readFileSync(path);
   res.setHeader('Content-Type', CONTENT_TYPES[extension]);
   res.setHeader('Content-Length', content.length);
   res.end(content);
@@ -51,8 +51,8 @@ const serveGuestBookPage = (req, res) => {
 };
 
 const loadComments = path => {
-  if (existsSync(path)) {
-    return JSON.parse(readFileSync(path, 'utf8') || '[]');
+  if (fs.existsSync(path)) {
+    return JSON.parse(fs.readFileSync(path, 'utf8') || '[]');
   }
   return [];
 };
@@ -62,7 +62,7 @@ const registerCommentAndRedirect = (req, res) => {
   const date = new Date();
   const { name, comment } = req.body;
   comments.push({ date, name, comment });
-  writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
+  fs.writeFileSync(COMMENTS_PATH, JSON.stringify(comments), 'utf8');
   redirectTo('/GuestBook.html', res);
 };
 
