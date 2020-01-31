@@ -44,4 +44,15 @@ describe('GET', () => {
         .expect('Content-Type', 'image/gif', done);
     });
   });
+  describe('FILE NOT FOUND', () => {
+    it('Should give file not found if file not exist', done => {
+      request(app)
+        .get('/badFile')
+        .set('Accept', '*/*')
+        .expect(404)
+        .expect('Content-Type', 'text/plain')
+        .expect('Content-Length', '18')
+        .expect('404 File Not Found', done);
+    });
+  });
 });
