@@ -12,7 +12,8 @@
     "eslint": "^6.8.0",
     "growl": "^1.10.5",
     "mocha": "^7.0.1",
-    "nyc": "^15.0.0"
+    "nyc": "^15.0.0",
+    "supertest": "^4.0.2"
   },
   "scripts": {
     "test": "nyc mocha && npm run linterTest",
