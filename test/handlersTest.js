@@ -179,4 +179,13 @@ describe('METHOD NOT ALLOWED', () => {
       .expect('Content-Length', '22')
       .expect('400 Method Not Allowed', done);
   });
+  it('Should should give method not allowed for delete method ', done => {
+    request(app)
+      .delete('/')
+      .set('Accept', '*/*')
+      .expect(400)
+      .expect('Content-Type', 'text/plain')
+      .expect('Content-Length', '22')
+      .expect('400 Method Not Allowed', done);
+  });
 });
