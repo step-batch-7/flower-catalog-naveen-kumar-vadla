@@ -4,6 +4,7 @@ const { existsSync, readFileSync, statSync, writeFileSync } = require('fs');
 const { loadTemplate } = require('./lib/viewTemplate');
 const queryString = require('querystring');
 const CONTENT_TYPES = require('./lib/mimeTypes');
+const App = require('./app');
 
 const STATIC_FOLDER = `${__dirname}/public`;
 const COMMENTS_PATH = `${__dirname}/data/comments.json`;
@@ -108,11 +109,17 @@ const serveBadRequestPage = (req, res) => {
   res.end(content);
 };
 
-module.exports = {
-  serveStaticFile,
-  serveGuestBookPage,
-  registerCommentAndRedirect,
-  readBody,
-  serveNotFoundPage,
-  serveBadRequestPage
-};
+const app = new App();
+
+app.get('/GuestBook.html', serveGuestBookPage);
+app.get('', serveStaticFile);
+app.get('', serveNotFoundPage);
+
+app.use(readBody);
+
+app.post('/registerComment', registerCommentAndRedirect);
+app.post('', serveNotFoundPage);
+
+app.use(serveBadRequestPage);
+
+module.exports = app;
