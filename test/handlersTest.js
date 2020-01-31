@@ -4,7 +4,7 @@ let app = require('../handlers');
 app = app.handleRequests.bind(app);
 
 describe('GET', () => {
-  describe('HOME PAGE', () => {
+  describe('Home Page', () => {
     it('should get the path / or index.html', done => {
       request(app)
         .get('/')
@@ -111,13 +111,14 @@ describe('GET', () => {
     });
   });
 
-  describe('GuestBook.html Page', () => {
+  describe('GuestBook Page', () => {
     it('should get the path /GuestBook.html', done => {
       request(app)
         .get('/GuestBook.html')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html', done);
+        .expect('Content-Type', 'text/html')
+        .expect('Content-Length', '2529', done);
     });
     it('should get the path /css/GuestBook.css', done => {
       request(app)
@@ -143,7 +144,7 @@ describe('GET', () => {
 });
 
 describe('POST', () => {
-  describe('should get the path /registerComment and post the comment', () => {
+  describe('Register Comment and Post', () => {
     it('Should should save comments and redirect to guestBook', done => {
       request(app)
         .post('/registerComment')
@@ -152,6 +153,18 @@ describe('POST', () => {
         .expect(301)
         .expect('Location', '/GuestBook.html')
         .expect('Content-Length', '0', done);
+    });
+  });
+  describe('FILE NOT FOUND', () => {
+    it('Should give file not found if file not exist', done => {
+      request(app)
+        .post('/badFile')
+        .set('Accept', '*/*')
+        .send('name=raja&comment=wonderful+site')
+        .expect(404)
+        .expect('Content-Type', 'text/plain')
+        .expect('Content-Length', '18')
+        .expect('404 File Not Found', done);
     });
   });
 });
