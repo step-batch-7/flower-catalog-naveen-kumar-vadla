@@ -70,6 +70,32 @@ describe('GET', () => {
         .expect('Content-Type', 'image/jpeg', done);
     });
   });
+  
+  describe ('Ageratum Page', () => {
+    it('should get the path /Ageratum.html', done => {
+      request(app)
+        .get('/Ageratum.html')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'text/html')
+        .expect('Content-Length', '1236', done);
+    });
+    it('should get the path /css/Ageratum.css', done => {
+      request(app)
+        .get('/css/Ageratum.css')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'text/css')
+        .expect('Content-Length', '555', done);
+    });
+    it('should get the path /images/Ageratum.jpg', done => {
+      request(app)
+        .get('/images/Ageratum.jpg')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'image/jpeg', done);
+    });
+  });
 
   describe('FILE NOT FOUND', () => {
     it('Should give file not found if file not exist', done => {
