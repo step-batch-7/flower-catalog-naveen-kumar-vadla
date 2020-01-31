@@ -1,7 +1,5 @@
 'use strict';
 const request = require('supertest');
-const fs = require('fs');
-const sinon = require('sinon');
 
 let app = require('../handlers');
 app = app.handleRequests.bind(app);
@@ -120,8 +118,7 @@ describe('GET', () => {
         .get('/GuestBook.html')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html')
-        .expect('Content-Length', '2529', done);
+        .expect('Content-Type', 'text/html', done);
     });
     it('should get the path /css/GuestBook.css', done => {
       request(app)
@@ -148,13 +145,11 @@ describe('GET', () => {
 
 describe('POST', () => {
   describe('Register Comment and Post', () => {
-    beforeEach(() => sinon.replace(fs, 'writeFileSync', () => {}));
-    afterEach(() => sinon.restore());
     it('Should should save comments and redirect to guestBook', done => {
       request(app)
         .post('/registerComment')
         .set('Accept', '*/*')
-        .send('name=raja&comment=wonderful+sitefgfddff')
+        .send('name=raja&comment=wonderful+site')
         .expect(301)
         .expect('Location', '/GuestBook.html')
         .expect('Content-Length', '0', done);
