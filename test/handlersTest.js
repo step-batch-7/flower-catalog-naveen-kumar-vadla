@@ -44,6 +44,33 @@ describe('GET', () => {
         .expect('Content-Type', 'image/gif', done);
     });
   });
+
+  describe ('Abeliophyllum Page', () => {
+    it('should get the path /Abeliophyllum.html', done => {
+      request(app)
+        .get('/Abeliophyllum.html')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'text/html')
+        .expect('Content-Length', '1493', done);
+    });
+    it('should get the path /css/Abeliophyllum.css', done => {
+      request(app)
+        .get('/css/Abeliophyllum.css')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'text/css')
+        .expect('Content-Length', '560', done);
+    });
+    it('should get the path /images/Abeliophyllum.jpg', done => {
+      request(app)
+        .get('/images/Abeliophyllum.jpg')
+        .set('Accept', '*/*')
+        .expect(200)
+        .expect('Content-Type', 'image/jpeg', done);
+    });
+  });
+
   describe('FILE NOT FOUND', () => {
     it('Should give file not found if file not exist', done => {
       request(app)
