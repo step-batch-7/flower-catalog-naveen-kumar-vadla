@@ -20,7 +20,7 @@
     "start": "export DATA_STORE='data/comments.json'; node server.js",
     "linterTest": "eslint .",
     "getLinter": "curl -s  https://raw.githubusercontent.com/blpabhishek/eslintrc-config/master/.eslintrc.json -o .eslintrc.json",
-    "watch": "mocha --watch --growl"
+    "watch": "export DATA_STORE='test/resource/comments.json'; mocha --watch --growl"
   },
   "repository": {
     "type": "git",

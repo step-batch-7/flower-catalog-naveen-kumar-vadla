@@ -4,7 +4,7 @@ const fs = require('fs');
 const queryString = require('querystring');
 
 const { loadTemplate } = require('./lib/viewTemplate');
-const {COMMENTS_PATH} = require('./config');
+const { COMMENTS_PATH } = require('./config');
 const CONTENT_TYPES = require('./lib/mimeTypes');
 const App = require('./app');
 
