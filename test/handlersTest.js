@@ -1,5 +1,7 @@
 'use strict';
 const request = require('supertest');
+const fs = require('fs');
+const sinon = require('sinon');
 
 let app = require('../handlers');
 app = app.handleRequests.bind(app);
@@ -144,6 +146,8 @@ describe('GET', () => {
 });
 
 describe('POST', () => {
+  beforeEach(() => sinon.replace(fs, 'writeFileSync', () => {}));
+  afterEach(() => sinon.restore());
   describe('Register Comment and Post', () => {
     it('Should should save comments and redirect to guestBook', done => {
       request(app)
