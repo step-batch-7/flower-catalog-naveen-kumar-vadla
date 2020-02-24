@@ -3,7 +3,7 @@ const request = require('supertest');
 const fs = require('fs');
 const sinon = require('sinon');
 
-let app = require('../handlers');
+let app = require('../lib/handlers');
 app = app.handleRequests.bind(app);
 
 describe('GET', () => {
