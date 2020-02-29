@@ -153,9 +153,9 @@ describe('POST', () => {
         .post('/registerComment')
         .set('Accept', '*/*')
         .send('name=raja&comment=wonderful+site')
-        .expect(301)
+        .expect(302)
         .expect('Location', '/GuestBook.html')
-        .expect('Content-Length', '0', done);
+        .expect('Content-Length', '37', done);
     });
   });
   describe('FILE NOT FOUND', () => {
