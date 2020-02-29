@@ -3,8 +3,7 @@ const request = require('supertest');
 const fs = require('fs');
 const sinon = require('sinon');
 
-let app = require('../lib/handlers');
-app = app.handleRequests.bind(app);
+const app = require('../lib/app');
 
 describe('GET', () => {
   describe('Home Page', () => {
@@ -13,7 +12,7 @@ describe('GET', () => {
         .get('/')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html')
+        .expect('Content-Type', /html/)
         .expect('Content-Length', '817', done);
     });
     it('should get the path /css/homePage.css', done => {
@@ -21,7 +20,7 @@ describe('GET', () => {
         .get('/css/homePage.css')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/css')
+        .expect('Content-Type', /css/)
         .expect('Content-Length', '465', done);
     });
     it('should get the path /js/hideImage.js', done => {
@@ -29,7 +28,7 @@ describe('GET', () => {
         .get('/js/hideImage.js')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'application/javascript')
+        .expect('Content-Type', /javascript/)
         .expect('Content-Length', '248', done);
     });
     it('should get the path /images/freshorigins.jpg', done => {
@@ -54,7 +53,7 @@ describe('GET', () => {
         .get('/Abeliophyllum.html')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html')
+        .expect('Content-Type', /html/)
         .expect('Content-Length', '1493', done);
     });
     it('should get the path /css/Abeliophyllum.css', done => {
@@ -62,7 +61,7 @@ describe('GET', () => {
         .get('/css/Abeliophyllum.css')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/css')
+        .expect('Content-Type', /css/)
         .expect('Content-Length', '560', done);
     });
     it('should get the path /images/Abeliophyllum.jpg', done => {
@@ -87,7 +86,7 @@ describe('GET', () => {
         .get('/Ageratum.html')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html')
+        .expect('Content-Type', /html/)
         .expect('Content-Length', '1236', done);
     });
     it('should get the path /css/Ageratum.css', done => {
@@ -95,7 +94,7 @@ describe('GET', () => {
         .get('/css/Ageratum.css')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/css')
+        .expect('Content-Type', /css/)
         .expect('Content-Length', '555', done);
     });
     it('should get the path /images/Ageratum.jpg', done => {
@@ -120,14 +119,14 @@ describe('GET', () => {
         .get('/GuestBook.html')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/html', done);
+        .expect('Content-Type', /html/, done);
     });
     it('should get the path /css/GuestBook.css', done => {
       request(app)
         .get('/css/GuestBook.css')
         .set('Accept', '*/*')
         .expect(200)
-        .expect('Content-Type', 'text/css')
+        .expect('Content-Type', /css/)
         .expect('Content-Length', '656', done);
     });
   });
@@ -138,9 +137,9 @@ describe('GET', () => {
         .get('/badFile')
         .set('Accept', '*/*')
         .expect(404)
-        .expect('Content-Type', 'text/plain')
-        .expect('Content-Length', '18')
-        .expect('404 File Not Found', done);
+        .expect('Content-Type', /html/)
+        .expect('Content-Length', '146')
+        .expect(/badFile/, done);
     });
   });
 });
@@ -166,9 +165,9 @@ describe('POST', () => {
         .set('Accept', '*/*')
         .send('name=raja&comment=wonderful+site')
         .expect(404)
-        .expect('Content-Type', 'text/plain')
-        .expect('Content-Length', '18')
-        .expect('404 File Not Found', done);
+        .expect('Content-Type', /html/)
+        .expect('Content-Length', '147')
+        .expect(/badFile/, done);
     });
   });
 });
@@ -178,18 +177,18 @@ describe('METHOD NOT ALLOWED', () => {
     request(app)
       .put('/')
       .set('Accept', '*/*')
-      .expect(400)
-      .expect('Content-Type', 'text/plain')
-      .expect('Content-Length', '22')
-      .expect('400 Method Not Allowed', done);
+      .expect(404)
+      .expect('Content-Type', /html/)
+      .expect('Content-Length', '139')
+      .expect(/Cannot PUT/, done);
   });
   it('Should should give method not allowed for delete method ', done => {
     request(app)
       .delete('/')
       .set('Accept', '*/*')
-      .expect(400)
-      .expect('Content-Type', 'text/plain')
-      .expect('Content-Length', '22')
-      .expect('400 Method Not Allowed', done);
+      .expect(404)
+      .expect('Content-Type', /html/)
+      .expect('Content-Length', '142')
+      .expect(/Cannot DELETE/, done);
   });
 });
