@@ -1,7 +1,5 @@
 'use strict';
 const request = require('supertest');
-const fs = require('fs');
-const sinon = require('sinon');
 
 const app = require('../lib/app');
 
@@ -145,8 +143,6 @@ describe('GET', () => {
 });
 
 describe('POST', () => {
-  beforeEach(() => sinon.replace(fs, 'writeFileSync', () => {}));
-  afterEach(() => sinon.restore());
   describe('Register Comment and Post', () => {
     it('Should should save comments and redirect to guestBook', done => {
       request(app)
@@ -154,7 +150,6 @@ describe('POST', () => {
         .set('Accept', '*/*')
         .send('name=raja&comment=wonderful+site')
         .expect(302)
-        .expect('Location', '/GuestBook.html')
         .expect('Content-Length', '37', done);
     });
   });
